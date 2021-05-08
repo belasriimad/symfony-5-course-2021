@@ -1,0 +1,54 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Accueil{% endblock %}
+
+
+{% block body %}
+<div class="row my-5">
+    <div class="col-md-8 mx-auto">
+        {% for message in app.flashes("success") %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div class="card">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Titre</th>
+                        <th>Description</th>
+                        <th>Ajouté par</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr>
+                        <td scope="row">{{task.id}}</td>
+                        <td>{{task.title}}</td>
+                        <td>{{task.body}}</td>
+                        <td>{{task.user.username}}</td>
+                        <td>
+                            <a href="{{ path('task_show',{id : task.id}) }}" class="btn btn-sm btn-primary">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                            {% if is_granted('ROLE_USER') %}
+                                {% if task.user.id == app.user.id %}
+                                    <a href="{{ path('task_edit',{id : task.id}) }}" class="btn btn-sm btn-warning">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="{{ path('task_delete',{id : task.id}) }}" class="btn btn-sm btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

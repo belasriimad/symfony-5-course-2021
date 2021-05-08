@@ -1,0 +1,70 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ user.username }}{% endblock %}
+
+
+{% block body %}
+<div class="row my-5">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    {{ user.email }}
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    {% if user.image == null %}
+                    <img src="https://cdn.pixabay.com/photo/2021/02/19/02/50/man-6029064__340.jpg" width="150"
+                        height="150" class="img-fluid my-2 rounded-circle" alt="{{user.username}}">
+                    {% else %}
+                    <img src="{{asset('/uploads/'~user.image)}}" width="150" height="150"
+                        class="img-fluid my-2 rounded-circle" alt="{{user.username}}">
+                    {% endif %}
+                </div>
+                <form action="{{ path('upload_image') }}" method="post" enctype="multipart/form-data">
+                    <input type="file" name="image" id="image" class="form-control">
+                    <button type="submit" class="btn btn-primary my-2">
+                        Valider
+                    </button>
+                </form>
+            </div>
+            <div class="p-2">
+                <h2 class="text-dark">Mes Notes</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Titre</th>
+                            <th>Description</th>
+                            <th>Ajouté par</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for task in user.tasks %}
+                        <tr>
+                            <td scope="row">{{task.id}}</td>
+                            <td>{{task.title}}</td>
+                            <td>{{task.body}}</td>
+                            <td>{{task.user.username}}</td>
+                            <td>
+                                <a href="{{ path('task_show',{id : task.id}) }}" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                                <a href="{{ path('task_edit',{id : task.id}) }}" class="btn btn-sm btn-warning">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a href="{{ path('task_delete',{id : task.id}) }}" class="btn btn-sm btn-danger">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
